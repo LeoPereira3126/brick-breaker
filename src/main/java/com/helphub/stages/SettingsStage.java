@@ -27,6 +27,8 @@ public class SettingsStage implements BaseMenu {
   //  private Button previousPlatformColorButton;
   //  private Button nextPlatformColorButton;
 
+  private Text settingsTitle;
+
   // Back button
   private Button backButton;
 
@@ -49,12 +51,14 @@ public class SettingsStage implements BaseMenu {
   public SettingsStage(BrickBreaker game) {
     this.game = game;
 
+    this.settingsTitle = new Text("Settings", Fonts.BIG, Color.ORANGE, Config.screenWidth / 2, Config.scaleByY(150), Align.CENTER);
+
     // Volume
-    volumeLabel = new Text("Volume", Fonts.MEDIUM, Color.white, this.game.width / 2, 300, Align.CENTER);
-    volumeValue = new Text(String.valueOf(Config.volume), Fonts.SMALL, Color.white, 0, 0, Align.CENTER);
+    volumeLabel = new Text("Volume", Fonts.MD, Color.white, Config.screenWidth / 2, Config.scaleByY(300), Align.CENTER);
+    volumeValue = new Text(String.valueOf(Config.volume), Fonts.SM, Color.white, 0, 0, Align.CENTER);
     volumeValue.placeNextTo(volumeLabel, Side.BELOW);
 
-    minusVolumeButton = new Button("<", Fonts.SMALL, Color.ORANGE, 0, 0, Align.CENTER);
+    minusVolumeButton = new Button("<", Fonts.SM, Color.ORANGE, 0, 0, Align.CENTER);
     minusVolumeButton.placeNextTo(volumeValue, Side.LEFT);
     minusVolumeButton.setOnClick(() -> {
       Config.volume = Math.max(0, Config.volume - 5);
@@ -63,7 +67,7 @@ public class SettingsStage implements BaseMenu {
       this.minusVolumeButton.calculatePlacement();
     });
 
-    plusVolumeButton = new Button(">", Fonts.SMALL, Color.ORANGE, 0, 0, Align.CENTER);
+    plusVolumeButton = new Button(">", Fonts.SM, Color.ORANGE, 0, 0, Align.CENTER);
     plusVolumeButton.placeNextTo(volumeValue, Side.RIGHT);
     plusVolumeButton.setOnClick(() -> {
       Config.volume = Math.min(100, Config.volume + 5);
@@ -73,8 +77,8 @@ public class SettingsStage implements BaseMenu {
     });
 
     // Debug mode
-    debugModeLabel = new Text("Debug mode", Fonts.MEDIUM, Color.white, this.game.width / 2, 450, Align.CENTER);
-    debugModeSwitch = new Button(Config.debugMode ? "Yes" : "No", Fonts.SMALL, Color.ORANGE, 0, 0, Align.CENTER);
+    debugModeLabel = new Text("Debug mode", Fonts.MD, Color.white, Config.screenWidth / 2, Config.scaleByY(450), Align.CENTER);
+    debugModeSwitch = new Button(Config.debugMode ? "Yes" : "No", Fonts.SM, Color.ORANGE, 0, 0, Align.CENTER);
     debugModeSwitch.placeNextTo(debugModeLabel, Side.BELOW);
     debugModeSwitch.setOnClick(() -> {
       Config.debugMode = !Config.debugMode;
@@ -82,41 +86,34 @@ public class SettingsStage implements BaseMenu {
     });
 
     // Resolution
-    resolutionLabel = new Text("Resolution", Fonts.MEDIUM, Color.white, this.game.width / 2, 600, Align.CENTER);
-    resolutionValue = new Text(String.format("%sx%s", Config.screenWidth, Config.screenHeight), Fonts.SMALL, Color.white, 0, 0, Align.CENTER);
+    resolutionLabel = new Text("Resolution", Fonts.MD, Color.white, Config.screenWidth / 2, Config.scaleByY(600), Align.CENTER);
+    resolutionValue = new Text(String.format("%sx%s", Config.screenWidth, Config.screenHeight), Fonts.SM, Color.white, 0, 0, Align.CENTER);
     resolutionValue.placeNextTo(resolutionLabel, Side.BELOW);
 
-    minusResolutionButton = new Button("<", Fonts.SMALL, Color.ORANGE, 0, 0, Align.CENTER);
+    minusResolutionButton = new Button("<", Fonts.SM, Color.ORANGE, 0, 0, Align.CENTER);
     minusResolutionButton.placeNextTo(resolutionValue, Side.LEFT);
     minusResolutionButton.setOnClick(() -> {
       int currentIndex = Arrays.binarySearch(this.resolutions, Config.getResolution());
-      String newResolution = this.resolutions[currentIndex - 1];
+      String newResolution = this.resolutions[currentIndex == 0 ? this.resolutions.length - 1 : currentIndex - 1];
       Config.setResolution(newResolution);
       this.resolutionValue.setContent(newResolution);
       this.plusResolutionButton.calculatePlacement();
       this.minusResolutionButton.calculatePlacement();
-      this.game.width = Config.screenWidth;
-      this.game.height = Config.screenHeight;
     });
 
-    plusResolutionButton = new Button(">", Fonts.SMALL, Color.ORANGE, 0, 0, Align.CENTER);
+    plusResolutionButton = new Button(">", Fonts.SM, Color.ORANGE, 0, 0, Align.CENTER);
     plusResolutionButton.placeNextTo(resolutionValue, Side.RIGHT);
     plusResolutionButton.setOnClick(() -> {
       int currentIndex = Arrays.binarySearch(this.resolutions, Config.getResolution());
-      String newResolution = this.resolutions[currentIndex + 1];
+      String newResolution = this.resolutions[currentIndex == this.resolutions.length - 1 ? 0 : currentIndex + 1];
       Config.setResolution(newResolution);
       this.resolutionValue.setContent(newResolution);
       this.plusResolutionButton.calculatePlacement();
       this.minusResolutionButton.calculatePlacement();
-      this.game.width = Config.screenWidth;
-      this.game.height = Config.screenHeight;
-      Dimension dim = new Dimension(Config.screenWidth, Config.screenHeight);
-      this.game.setPreferredSize(dim);
-      this.game.setSize(dim);
     });
 
     // Back button
-    backButton = new Button("Back", Fonts.SMALL, Color.ORANGE, this.game.width / 2, 750, Align.CENTER);
+    backButton = new Button("Back", Fonts.SM, Color.ORANGE, Config.screenWidth / 2, Config.scaleByY(750), Align.CENTER);
     backButton.setOnClick(() -> {
       Config.save();
       this.game.stage = this.game.menuStage;
@@ -132,7 +129,7 @@ public class SettingsStage implements BaseMenu {
 
   @Override
   public void draw(Graphics2D g2) {
-    Text.draw(g2, "Settings", Fonts.BIG, Color.ORANGE, this.game.width / 2, 150, Align.CENTER);
+    this.settingsTitle.draw(g2);
 
     // Back button
     this.backButton.draw(g2);

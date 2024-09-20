@@ -1,5 +1,6 @@
 package com.helphub.utilities;
 
+import com.helphub.Config;
 import com.helphub.loaders.FontLoader;
 
 import java.awt.*;
@@ -10,13 +11,15 @@ public class Fonts {
 
   static {
     try {
-      BIG = FontLoader.loadCustomFont("LEMONMILK-Bold.otf", 60);
+      BIG = FontLoader.loadCustomFont("LEMONMILK-Bold.otf", Config.scaleByY(60));
     } catch (FontFormatException | IOException e) {
       throw new RuntimeException(e);
     }
   }
-  public static final Font XL = BIG.deriveFont(80F);
-  public static final Font XXL = BIG.deriveFont(100F);
-  public static final Font MEDIUM = BIG.deriveFont(50F);
-  public static final Font SMALL = BIG.deriveFont(35F);
+
+  public static final Font XL = BIG.deriveFont((float) Config.scaleByY(80));
+  public static final Font XXL = BIG.deriveFont((float) Config.scaleByY(100));
+  public static final Font MD = BIG.deriveFont((float) Config.scaleByY(50));
+  public static final Font SM = BIG.deriveFont((float) Config.scaleByY(35));
+  public static final Font XS = BIG.deriveFont((float) Config.scaleByY(15));
 }

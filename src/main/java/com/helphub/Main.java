@@ -45,6 +45,11 @@ public class Main {
     // Set the title of the window
     window.setTitle("BrickBreaker");
 
+    window.setUndecorated(true);  // Eliminar bordes de la ventana
+    window.setResizable(false);   // No permitir cambiar el tamaño
+
+    GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+
     // Create a new instance of the BlockBreaker game panel
     BrickBreaker game = new BrickBreaker(window);
 
@@ -56,6 +61,9 @@ public class Main {
 
     // Center the window on the screen
     window.setLocationRelativeTo(null);
+
+    // Establecer el JFrame en modo de pantalla completa
+    graphicsDevice.setFullScreenWindow(window);
 
     // Make the window visible
     window.setVisible(true);

@@ -1,6 +1,7 @@
 package com.helphub.managers;
 
 import com.helphub.BrickBreaker;
+import com.helphub.Config;
 import com.helphub.entities.Ball;
 import com.helphub.entities.Brick;
 
@@ -89,7 +90,7 @@ public class BrickManager {
     // Calculamos el tamaño de los ladrillos, asegurándonos de que quepan en el ancho del juego.
     // Agregamos un espacio extra para evitar que los ladrillos se superpongan con los bordes.
     int totalSpacing = spacing * (this.cols + 2); // Espaciado total incluyendo bordes
-    int availableWidth = this.game.width - totalSpacing; // Ancho disponible para ladrillos
+    int availableWidth = Config.screenWidth - totalSpacing; // Ancho disponible para ladrillos
     int brickWidth = availableWidth / this.cols; // Tamaño de cada ladrillo
     int brickHeight = brickWidth / 2;
 

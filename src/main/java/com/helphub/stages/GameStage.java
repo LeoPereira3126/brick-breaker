@@ -38,11 +38,11 @@ public class GameStage implements Stage {
 
     // Initialize entities
     this.player = new Player(game);
-    this.ball = new Ball(this);
+    this.ball = new Ball();
 
-    leftBoundary = new Rectangle(0, 0, 10, game.height);
-    rightBoundary = new Rectangle(game.width - 10, 0, 10, game.height);
-    topBoundary = new Rectangle(0, 0, game.width, 10);
+    leftBoundary = new Rectangle(0, 0, Config.scaleByX(10), Config.screenHeight);
+    rightBoundary = new Rectangle(Config.screenWidth - Config.scaleByX(10), 0, Config.scaleByX(10), Config.screenHeight);
+    topBoundary = new Rectangle(0, 0, Config.screenWidth, Config.scaleByY(10));
 
     this.reset();
   }
@@ -80,7 +80,7 @@ public class GameStage implements Stage {
     brickManager.draw(g2);
 
     if (this.standing_by) {
-      Text.draw(g2, "Press space to start", Fonts.BIG, Color.orange, this.game.width / 2, 400, Align.CENTER);
+      Text.draw(g2, "Press space to start", Fonts.BIG, Color.orange, Config.screenWidth / 2, Config.scaleByY(400), Align.CENTER);
     }
   }
 

@@ -1,5 +1,6 @@
 package com.helphub.entities;
 
+import com.helphub.Config;
 import com.helphub.stages.GameStage;
 import com.helphub.managers.SoundManager;
 import com.helphub.base.Entity;
@@ -12,11 +13,11 @@ import java.util.Random;
 @SuppressWarnings("FieldCanBeLocal")
 public class Ball extends Entity {
 
-  private final int size = 15;
+  private final int size = Config.scaleByX(15);
 
   // Base speeds for X and Y directions
-  private final int baseSpeedX = 7;
-  private final int baseSpeedY = 5;
+  private final int baseSpeedX = Config.scaleByX(7);
+  private final int baseSpeedY = Config.scaleByY(5);
 
   // Current speeds in X and Y directions
   public int speedX = baseSpeedX;
@@ -27,10 +28,8 @@ public class Ball extends Entity {
   private final int maxSpeedY = baseSpeedY * 3;
 
   public Line2D.Double prediction;
-  private GameStage gameStage;
 
-  public Ball(GameStage gameStage) {
-    this.gameStage = gameStage;
+  public Ball() {
     this.reset();
     this.width = this.size;
     this.height = this.size;
@@ -72,8 +71,8 @@ public class Ball extends Entity {
    * Resets the ball to its initial position and speed.
    */
   public void reset() {
-    this.x = this.gameStage.game.width / 2 - this.width / 2;
-    this.y = (int)(this.gameStage.game.height * 0.75);
+    this.x = Config.screenWidth / 2 - this.width / 2;
+    this.y = (int)(Config.screenHeight * 0.75);
     this.speedX = this.baseSpeedX;
     this.speedY = -this.baseSpeedY;
   }
@@ -119,20 +118,17 @@ public class Ball extends Entity {
 
     if (this.prediction.intersects(gameStage.leftBoundary) || this.intersects(gameStage.leftBoundary)) {
       this.bounce("left");
-      SoundManager.playSound("Fireball.wav");
     }
 
     if (this.prediction.intersects(gameStage.rightBoundary) || this.intersects(gameStage.rightBoundary)) {
       this.bounce("right");
-      SoundManager.playSound("Fireball.wav");
     }
 
     if (this.prediction.intersects(gameStage.topBoundary) || this.intersects(gameStage.topBoundary)) {
       this.bounce("top");
-      SoundManager.playSound("Fireball.wav");
     }
 
-    if (this.y > gameStage.game.height) {
+    if (this.y > Config.screenHeight) {
       gameStage.game.addMouseListener(gameStage.game.gameOverStage);
       gameStage.game.stage = gameStage.game.gameOverStage;
       SoundManager.playSound("Game-Over.wav");
