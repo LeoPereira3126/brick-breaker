@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class BrickManager {
 
   // List to store all the bricks.
-  private ArrayList<Brick> bricks;
+  private ArrayList<Brick> bricks = new ArrayList<>();
 
   // Spacing between bricks.
   private final int spacing = 5;
@@ -86,14 +86,16 @@ public class BrickManager {
    * Each brick is given a color and associated with the game window.
    */
   public void generateBricks() {
-    bricks = new ArrayList<>(); // Initialize the brick list.
+    if (this.getRemainingBricks() > 0) {
+      bricks = new ArrayList<>();
+    } // Initialize the brick list.
 
     // Loop through each row to position bricks vertically.
     for (int row = 0; row < rows; row++) {
 
       // Loop through each column to position bricks horizontally,
       // but limit the number of columns to fit within the screen width.
-      for (int col = 0; col < this.game.screenWidth / (size * 2 + spacing); col++) {
+      for (int col = 0; col < this.game.width / (size * 2 + spacing); col++) {
 
         // Create a new brick instance.
         Brick brick = new Brick(size * 2, size);

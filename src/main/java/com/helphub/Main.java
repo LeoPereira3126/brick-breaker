@@ -1,6 +1,11 @@
 package com.helphub;
 
+import com.helphub.loaders.CursorLoader;
+
 import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * Main class to launch the Block Breaker game.
@@ -13,9 +18,23 @@ public class Main {
    *
    * @param args command-line arguments (not used)
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException, FontFormatException {
     // Create a new JFrame instance which represents the main window of the game
     JFrame window = new JFrame();
+
+    Cursor cursor = CursorLoader.loadCursor("Default");
+
+    Config.load();
+
+    URL iconPath = Main.class.getResource("/icon.ico");
+
+    assert iconPath != null;
+
+    ImageIcon icon = new ImageIcon(iconPath);
+
+    window.setIconImage(icon.getImage());
+
+    window.setCursor(cursor);
 
     // Set the default close operation to exit the application when the window is closed
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

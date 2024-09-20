@@ -1,12 +1,14 @@
 package com.helphub.managers;
 
+import com.helphub.Config;
+
 import javax.sound.sampled.*;
 import java.io.IOException;
 import java.net.URL;
 
 public class SoundManager {
 
-  public static void playSound(String soundFile, float volume) {
+  public static void playSound(String soundFile) {
     try {
       // Cargar el archivo de sonido desde el classpath
       URL url = SoundManager.class.getResource("/sounds/" + soundFile);
@@ -27,7 +29,7 @@ public class SoundManager {
       FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
       float min = volumeControl.getMinimum();
       float max = volumeControl.getMaximum();
-      float gain = (volume / 100.0f) * (max - min) + min;
+      float gain = (Config.volume / 100.0f) * (max - min) + min;
       volumeControl.setValue(gain);
 
       clip.start();

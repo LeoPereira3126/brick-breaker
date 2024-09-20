@@ -1,16 +1,19 @@
-package com.helphub;
+package com.helphub.managers;
+
+import com.helphub.BrickBreaker;
+import com.helphub.stages.GameStage;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 @SuppressWarnings("FieldMayBeFinal")
-public class KeyHandler implements KeyListener {
+public class KeyManager implements KeyListener {
 
   // Flags to track whether the player is moving left or right.
   public boolean isMovingLeft, isMovingRight;
   private BrickBreaker game;
 
-  public KeyHandler(BrickBreaker game) {
+  public KeyManager(BrickBreaker game) {
     this.game = game;
   }
 
@@ -31,13 +34,11 @@ public class KeyHandler implements KeyListener {
 
     // If the 'A' key (used for moving left) is pressed, set the 'isMovingLeft' flag to true.
     if (code == KeyEvent.VK_A) {
-      this.game.paused = false;
       isMovingLeft = true;
     }
 
     // If the 'D' key (used for moving right) is pressed, set the 'isMovingRight' flag to true.
     if (code == KeyEvent.VK_D) {
-      this.game.paused = false;
       isMovingRight = true;
     }
 
@@ -46,7 +47,11 @@ public class KeyHandler implements KeyListener {
     }
 
     if (code == KeyEvent.VK_ESCAPE) {
-      this.game.paused = true;
+      ((GameStage) this.game.stage).standing_by = true;
+    }
+
+    if (code == KeyEvent.VK_SPACE) {
+      ((GameStage) this.game.stage).standing_by = false;
     }
   }
 

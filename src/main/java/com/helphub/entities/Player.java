@@ -1,6 +1,7 @@
 package com.helphub.entities;
 
 import com.helphub.BrickBreaker;
+import com.helphub.base.Entity;
 
 import java.awt.*;
 import java.util.Objects;
@@ -26,8 +27,8 @@ public class Player extends Entity {
 
   public Player(BrickBreaker game) {
     this.game = game;
+    this.height = 15;
     this.reset();
-    this.height = 10;
   }
 
   /**
@@ -60,8 +61,9 @@ public class Player extends Entity {
    * restores the base speed and width, and sets the color to white.
    */
   public void reset() {
-    this.x = 1600 / 2 - this.width / 2; // Center the paddle horizontally
-    this.y = this.game.screenHeight - this.height * 2;
+    if (this.game.gameStage != null) this.game.gameStage.keyManager.reset();
+    this.x = this.game.width / 2 - this.width / 2; // Center the paddle horizontally
+    this.y = this.game.height - this.height * 2;
     this.speed = this.baseSpeed; // Restore base speed
     this.width = this.baseWidth; // Restore base width
     this.color = Color.white; // Reset color to white
@@ -83,8 +85,8 @@ public class Player extends Entity {
     }
 
     // Ensure the paddle does not move beyond the right edge
-    if (this.x + this.width > this.game.getWidth() - 20) {
-      this.x = this.game.screenWidth - 20 - this.width;
+    if (this.x + this.width > this.game.width - 20) {
+      this.x = this.game.width - 20 - this.width;
     }
   }
 }

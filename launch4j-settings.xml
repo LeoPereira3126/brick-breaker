@@ -3,7 +3,7 @@
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
   <jar>D:\HelpHub\Desktop\java\java-game\out\artifacts\java_game_jar\java-game.jar</jar>
-  <outfile>D:\HelpHub\Desktop\java\java-game\out\artifacts\java_game_jar\BlockBreaker.exe</outfile>
+  <outfile>D:\HelpHub\Desktop\BrickBreaker.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -13,7 +13,7 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon></icon>
+  <icon>D:\HelpHub\Desktop\java\java-game\resources\icon.ico</icon>
   <jre>
     <path>C:\Program Files\Java\jdk-22</path>
     <requiresJdk>false</requiresJdk>

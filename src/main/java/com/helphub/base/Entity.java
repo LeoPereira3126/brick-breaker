@@ -1,4 +1,4 @@
-package com.helphub.entities;
+package com.helphub.base;
 
 import com.helphub.BrickBreaker;
 
@@ -8,7 +8,6 @@ import java.awt.*;
  * Abstract base class for all entities in the game.
  * Provides common properties and methods for manipulating game entities.
  */
-@SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
 public abstract class Entity extends Rectangle {
   // Reference to the game window (JPanel) where the entity will be drawn
   public BrickBreaker game;

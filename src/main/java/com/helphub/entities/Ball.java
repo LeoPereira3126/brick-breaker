@@ -1,7 +1,8 @@
 package com.helphub.entities;
 
-import com.helphub.BrickBreaker;
+import com.helphub.stages.GameStage;
 import com.helphub.managers.SoundManager;
+import com.helphub.base.Entity;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -21,18 +22,23 @@ public class Ball extends Entity {
   public int speedY = -baseSpeedY;
 
   // Maximum speeds for X and Y directions
-  // From 15 (inclusive) the ball goes through collisions
   private final int maxSpeedX = baseSpeedX * 3;
   private final int maxSpeedY = baseSpeedY * 3;
 
   public Line2D.Double prediction;
+  private GameStage gameStage;
 
-  public Ball(BrickBreaker game) {
-    this.game = game;
+  public Ball(GameStage gameStage) {
+    this.gameStage = gameStage;
     this.reset();
     this.width = this.size;
     this.height = this.size;
-    this.prediction = new Line2D.Double(this.x + (double) this.width / 2, this.y + (double) this.height / 2, this.x + (double) this.width / 2 + this.speedX * 2, this.y + (double) this.height / 2 + this.speedY * 2);
+    this.prediction = new Line2D.Double(
+            this.x + (double) this.width / 2,
+            this.y + (double) this.height / 2,
+            this.x + (double) this.width / 2 + this.speedX * 2,
+            this.y + (double) this.height / 2 + this.speedY * 2
+    );
   }
 
   /**
@@ -60,8 +66,8 @@ public class Ball extends Entity {
    * Resets the ball to its initial position and speed.
    */
   public void reset() {
-    this.x = this.game.screenWidth / 2 - this.width / 2;
-    this.y = this.game.screenHeight / 2 - this.height / 2;
+    this.x = this.gameStage.game.width / 2 - this.width / 2;
+    this.y = (int)(this.gameStage.game.height * 0.75);
     this.speedX = this.baseSpeedX;
     this.speedY = -this.baseSpeedY;
   }
@@ -79,7 +85,7 @@ public class Ball extends Entity {
     } else {
       this.speedX = -speedX;
     }
-    SoundManager.playSound("Fireball.wav", 80);
+    SoundManager.playSound("Fireball.wav");
   }
 
   /**
@@ -87,9 +93,9 @@ public class Ball extends Entity {
    * If the ball hits the window edges, its direction is reversed.
    * If the ball intersects with the player, the player's difficulty is increased and the ball's speed is increased.
    *
-   * @param game the game window used to check for collisions with its edges
+   * @param gameStage the game stage used to check for collisions with its edges and entities
    */
-  public void update(BrickBreaker game) {
+  public void update(GameStage gameStage) {
     // Move the ball based on its current speed
     moveX(speedX);
     moveY(speedY);
@@ -99,28 +105,32 @@ public class Ball extends Entity {
     this.prediction.x2 = this.x + (double) this.width / 2 + this.speedX * 2;
     this.prediction.y2 = this.y + (double) this.height / 2 + this.speedY * 2;
 
-    if (this.prediction.intersects(this.game.player) || this.intersects(this.game.player)) {
+    if (this.prediction.intersects(gameStage.player) || this.intersects(gameStage.player)) {
       this.bounce("bottom");
-      game.player.upgrade();
+      gameStage.player.upgrade();
       this.upgrade();
     }
 
-    if (this.prediction.intersects(this.game.leftBoundary) || this.intersects(this.game.leftBoundary)) {
+    if (this.prediction.intersects(gameStage.leftBoundary) || this.intersects(gameStage.leftBoundary)) {
       this.bounce("left");
-      SoundManager.playSound("Fireball.wav", 80);
+      SoundManager.playSound("Fireball.wav");
     }
 
-    if (this.prediction.intersects(this.game.rightBoundary) || this.intersects(this.game.rightBoundary)) {
+    if (this.prediction.intersects(gameStage.rightBoundary) || this.intersects(gameStage.rightBoundary)) {
       this.bounce("right");
-      SoundManager.playSound("Fireball.wav", 80);
+      SoundManager.playSound("Fireball.wav");
     }
 
-    if (this.prediction.intersects(this.game.topBoundary) || this.intersects(this.game.topBoundary)) {
+    if (this.prediction.intersects(gameStage.topBoundary) || this.intersects(gameStage.topBoundary)) {
       this.bounce("top");
-      SoundManager.playSound("Fireball.wav", 80);
+      SoundManager.playSound("Fireball.wav");
     }
 
-    if (this.y > this.game.screenHeight) game.restart();
+    if (this.y > gameStage.game.height) {
+      gameStage.game.addMouseListener(gameStage.game.gameOverStage);
+      gameStage.game.stage = gameStage.game.gameOverStage;
+      SoundManager.playSound("Game-Over.wav");
+    };
   }
 
   /**
@@ -129,10 +139,18 @@ public class Ball extends Entity {
    *
    * @param g2 the Graphics2D object used for drawing
    */
-//  @Override
+  @Override
   public void draw(Graphics2D g2) {
     g2.setColor(Color.white);
     g2.fillOval(this.x, this.y, this.width, this.height);
+  }
+
+  public void drawPrediction(Graphics2D g2) {
+    Stroke ogStroke = g2.getStroke();
+    g2.setStroke(new BasicStroke(this.size));
+    g2.setColor(Color.MAGENTA);
+    g2.draw(this.prediction);
+    g2.setStroke(ogStroke);
   }
 
   /**
