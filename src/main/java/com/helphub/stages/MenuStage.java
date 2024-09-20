@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 
 import com.helphub.BrickBreaker;
 import com.helphub.base.BaseMenu;
+import com.helphub.enums.Side;
 import com.helphub.utilities.Fonts;
 import com.helphub.enums.Align;
 import com.helphub.utilities.Button;
@@ -44,7 +45,13 @@ public class MenuStage implements BaseMenu {
 
   @Override
   public void draw(Graphics2D g2) {
-    Text.draw(g2, "[BrickBreaker]", Fonts.XL, Color.ORANGE, this.game.width / 2, 250, Align.CENTER);
+    Text title = new Text("BrickBreaker", Fonts.XL, Color.ORANGE, this.game.width / 2, 250, Align.CENTER);
+    Text leftBracket = new Text("[", Fonts.XXL, Color.getHSBColor(270 / 360.0f, 1.0F, 0.8F), title.x - 25, 245, Align.CENTER);
+    Text rightBracket = new Text("]", Fonts.XXL, Color.getHSBColor(270 / 360.0f, 1.0F, 0.8F), title.x + title.width + 25, 245, Align.CENTER);
+
+    title.draw(g2);
+    leftBracket.draw(g2);
+    rightBracket.draw(g2);
 
     playButton.draw(g2);
     settingsButton.draw(g2);
