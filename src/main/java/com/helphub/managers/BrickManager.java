@@ -16,11 +16,10 @@ public class BrickManager {
   // Spacing between bricks.
   private final int spacing = 5;
 
+  private final int cols = 28;
+
   // Number of rows and columns of bricks.
   private final int rows = 5;
-
-  // Size of each brick (assuming width and height are equal).
-  private final int size = 25;
 
   // Reference to the game instance (BlockBreaker) to interact with other game elements.
   private BrickBreaker game;
@@ -85,36 +84,41 @@ public class BrickManager {
    * Initializes the brick list and positions each brick in a grid formation.
    * Each brick is given a color and associated with the game window.
    */
+  // Método para generar los ladrillos en la pantalla.
   public void generateBricks() {
+    // Calculamos el tamaño de los ladrillos, asegurándonos de que quepan en el ancho del juego.
+    // Agregamos un espacio extra para evitar que los ladrillos se superpongan con los bordes.
+    int totalSpacing = spacing * (this.cols + 2); // Espaciado total incluyendo bordes
+    int availableWidth = this.game.width - totalSpacing; // Ancho disponible para ladrillos
+    int brickWidth = availableWidth / this.cols; // Tamaño de cada ladrillo
+    int brickHeight = brickWidth / 2;
+
+    // Verificamos si hay ladrillos restantes antes de inicializar la lista.
     if (this.getRemainingBricks() > 0) {
-      bricks = new ArrayList<>();
-    } // Initialize the brick list.
+      bricks = new ArrayList<>(); // Inicializamos la lista de ladrillos.
+    }
 
-    // Loop through each row to position bricks vertically.
+    // Recorremos cada fila para posicionar los ladrillos verticalmente.
     for (int row = 0; row < rows; row++) {
+      // Recorremos las columnas, limitando el número a 28 para ajustarse a los requisitos.
+      for (int col = 0; col < this.cols; col++) { // Cambiamos el límite a this.cols para que siempre se generen 28 columnas.
 
-      // Loop through each column to position bricks horizontally,
-      // but limit the number of columns to fit within the screen width.
-      for (int col = 0; col < this.game.width / (size * 2 + spacing); col++) {
+        // Creamos una nueva instancia de ladrillo con el tamaño calculado.
+        Brick brick = new Brick(brickWidth, brickHeight); // Tamaño del ladrillo ajustado para que sea el doble en ancho.
 
-        // Create a new brick instance.
-        Brick brick = new Brick(size * 2, size);
+        // Posicionamos el ladrillo horizontalmente basado en el índice de la columna y el espaciado.
+        brick.moveX(spacing * 2 + col * (brickWidth + spacing)); // Ajustamos la posición horizontal con el espaciado.
 
-        brick.moveX(spacing);
-        brick.moveY(spacing);
+        // Posicionamos el ladrillo verticalmente basado en el índice de la fila y el espaciado.
+        brick.moveY(spacing * 2 + row * (brickHeight + spacing)); // Ajustamos la posición vertical con el espaciado.
 
-        // Position the brick horizontally based on the column index and spacing.
-        brick.moveX(col * (size * 2 + spacing));
-
-        // Position the brick vertically based on the row index and spacing.
-        brick.moveY(row * (size + spacing));
-
-        // Set the color of the brick. Here, it uses a fixed color based on the HSB color model.
+        // Establecemos el color del ladrillo usando el modelo de color HSB.
         brick.color = Color.getHSBColor(270 / 360.0f, 1.0F, 0.8F);
 
-        // Add the brick to the list of bricks.
+        // Añadimos el ladrillo a la lista de ladrillos.
         bricks.add(brick);
       }
     }
   }
+
 }

@@ -13,8 +13,8 @@ public class BrickBreaker extends JPanel implements Runnable {
   private JFrame window;
   public Stage stage;
 
-  public final int width = 1600;
-  public final int height = 900;
+  public int width = Config.screenWidth;
+  public int height = Config.screenHeight;
   private final int FPS = 60;
 
   // Handlers and other utilities

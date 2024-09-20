@@ -10,9 +10,11 @@ import com.helphub.utilities.Button;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 public class SettingsStage implements BaseMenu {
   private BrickBreaker game;
+  private String[] resolutions = {"800x600", "1280x1024", "1360x768", "1366x768", "1600x900", "1920x1080"};
 
   // TODO: Maybe?
   //  Bricks color
@@ -37,6 +39,12 @@ public class SettingsStage implements BaseMenu {
   // Debug mode
   private Text debugModeLabel;
   private Button debugModeSwitch;
+
+  // Resolution
+  private Text resolutionLabel;
+  private Text resolutionValue;
+  private Button minusResolutionButton;
+  private Button plusResolutionButton;
 
   public SettingsStage(BrickBreaker game) {
     this.game = game;
@@ -66,15 +74,49 @@ public class SettingsStage implements BaseMenu {
 
     // Debug mode
     debugModeLabel = new Text("Debug mode", Fonts.MEDIUM, Color.white, this.game.width / 2, 450, Align.CENTER);
-    debugModeSwitch = new Button(Config.debugMode ? "Sí" : "No", Fonts.SMALL, Color.ORANGE, 0, 0, Align.CENTER);
+    debugModeSwitch = new Button(Config.debugMode ? "Yes" : "No", Fonts.SMALL, Color.ORANGE, 0, 0, Align.CENTER);
     debugModeSwitch.placeNextTo(debugModeLabel, Side.BELOW);
     debugModeSwitch.setOnClick(() -> {
       Config.debugMode = !Config.debugMode;
-      debugModeSwitch.setContent(Config.debugMode ? "Sí" : "No");
+      debugModeSwitch.setContent(Config.debugMode ? "Yes" : "No");
+    });
+
+    // Resolution
+    resolutionLabel = new Text("Resolution", Fonts.MEDIUM, Color.white, this.game.width / 2, 600, Align.CENTER);
+    resolutionValue = new Text(String.format("%sx%s", Config.screenWidth, Config.screenHeight), Fonts.SMALL, Color.white, 0, 0, Align.CENTER);
+    resolutionValue.placeNextTo(resolutionLabel, Side.BELOW);
+
+    minusResolutionButton = new Button("<", Fonts.SMALL, Color.ORANGE, 0, 0, Align.CENTER);
+    minusResolutionButton.placeNextTo(resolutionValue, Side.LEFT);
+    minusResolutionButton.setOnClick(() -> {
+      int currentIndex = Arrays.binarySearch(this.resolutions, Config.getResolution());
+      String newResolution = this.resolutions[currentIndex - 1];
+      Config.setResolution(newResolution);
+      this.resolutionValue.setContent(newResolution);
+      this.plusResolutionButton.calculatePlacement();
+      this.minusResolutionButton.calculatePlacement();
+      this.game.width = Config.screenWidth;
+      this.game.height = Config.screenHeight;
+    });
+
+    plusResolutionButton = new Button(">", Fonts.SMALL, Color.ORANGE, 0, 0, Align.CENTER);
+    plusResolutionButton.placeNextTo(resolutionValue, Side.RIGHT);
+    plusResolutionButton.setOnClick(() -> {
+      int currentIndex = Arrays.binarySearch(this.resolutions, Config.getResolution());
+      String newResolution = this.resolutions[currentIndex + 1];
+      Config.setResolution(newResolution);
+      this.resolutionValue.setContent(newResolution);
+      this.plusResolutionButton.calculatePlacement();
+      this.minusResolutionButton.calculatePlacement();
+      this.game.width = Config.screenWidth;
+      this.game.height = Config.screenHeight;
+      Dimension dim = new Dimension(Config.screenWidth, Config.screenHeight);
+      this.game.setPreferredSize(dim);
+      this.game.setSize(dim);
     });
 
     // Back button
-    backButton = new Button("Back", Fonts.SMALL, Color.ORANGE, this.game.width / 2, 700, Align.CENTER);
+    backButton = new Button("Back", Fonts.SMALL, Color.ORANGE, this.game.width / 2, 750, Align.CENTER);
     backButton.setOnClick(() -> {
       Config.save();
       this.game.stage = this.game.menuStage;
@@ -104,6 +146,12 @@ public class SettingsStage implements BaseMenu {
     // Debug mode
     this.debugModeLabel.draw(g2);
     this.debugModeSwitch.draw(g2);
+
+    // Resolution
+    this.resolutionLabel.draw(g2);
+    this.resolutionValue.draw(g2);
+    this.minusResolutionButton.draw(g2);
+    this.plusResolutionButton.draw(g2);
   }
 
   @Override
@@ -118,6 +166,10 @@ public class SettingsStage implements BaseMenu {
       debugModeSwitch.click();
     } else if (backButton.contains(cursorPoint)) {
       backButton.click();
+    } else if (minusResolutionButton.contains(cursorPoint)) {
+      minusResolutionButton.click();
+    } else if (plusResolutionButton.contains(cursorPoint)) {
+      plusResolutionButton.click();
     }
   }
 
