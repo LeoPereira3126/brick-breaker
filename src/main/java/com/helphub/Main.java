@@ -22,8 +22,6 @@ public class Main {
     // Create a new JFrame instance which represents the main window of the game
     JFrame window = new JFrame();
 
-    Cursor cursor = CursorLoader.loadCursor("Default");
-
     Config.load();
 
     URL iconPath = Main.class.getResource("/icon.ico");
@@ -33,6 +31,8 @@ public class Main {
     ImageIcon icon = new ImageIcon(iconPath);
 
     window.setIconImage(icon.getImage());
+
+    Cursor cursor = CursorLoader.loadCursor("Default");
 
     window.setCursor(cursor);
 

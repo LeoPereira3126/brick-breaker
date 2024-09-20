@@ -33,12 +33,12 @@ public class KeyManager implements KeyListener {
     int code = e.getKeyCode();
 
     // If the 'A' key (used for moving left) is pressed, set the 'isMovingLeft' flag to true.
-    if (code == KeyEvent.VK_A) {
+    if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) {
       isMovingLeft = true;
     }
 
     // If the 'D' key (used for moving right) is pressed, set the 'isMovingRight' flag to true.
-    if (code == KeyEvent.VK_D) {
+    if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) {
       isMovingRight = true;
     }
 
@@ -61,12 +61,12 @@ public class KeyManager implements KeyListener {
     int code = e.getKeyCode();
 
     // If the 'A' key (used for moving left) is released, set the 'isMovingLeft' flag to false.
-    if (code == KeyEvent.VK_A) {
+    if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) {
       isMovingLeft = false;
     }
 
     // If the 'D' key (used for moving right) is released, set the 'isMovingRight' flag to false.
-    if (code == KeyEvent.VK_D) {
+    if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) {
       isMovingRight = false;
     }
   }

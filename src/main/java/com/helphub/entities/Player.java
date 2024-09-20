@@ -19,10 +19,10 @@ public class Player extends Entity {
   // Current speed of the player paddle, initialized to baseSpeed
   private int speed = baseSpeed;
   // Maximum speed of the player paddle
-  private final int maxSpeed = 35;
+  private final int maxSpeed = 40;
 
-  private final int level2 = 15;
-  private final int level3 = 25;
+  private final int level2 = 20;
+  private final int level3 = 30;
   private final int level4 = maxSpeed;
 
   public Player(BrickBreaker game) {

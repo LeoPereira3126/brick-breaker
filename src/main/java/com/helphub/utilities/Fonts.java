@@ -11,9 +11,7 @@ public class Fonts {
   static {
     try {
       BIG = FontLoader.loadCustomFont("LEMONMILK-Bold.otf", 60);
-    } catch (FontFormatException e) {
-      throw new RuntimeException(e);
-    } catch (IOException e) {
+    } catch (FontFormatException | IOException e) {
       throw new RuntimeException(e);
     }
   }

@@ -7,6 +7,7 @@ import com.helphub.base.Entity;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.util.Objects;
+import java.util.Random;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class Ball extends Entity {
@@ -48,17 +49,22 @@ public class Ball extends Entity {
    */
   public void upgrade() {
     // Update speedX based on its current direction and ensure it does not exceed maxSpeedX
+    Random random = new Random();
+
+    int newSpeedX = random.nextInt(2);
+
     if (this.speedX < 0) {
-      this.speedX = Math.max(this.speedX - 1, -this.maxSpeedX);
+      this.speedX = Math.max(this.speedX - newSpeedX, -this.maxSpeedX);
     } else {
-      this.speedX = Math.min(this.speedX + 1, this.maxSpeedX);
+      this.speedX = Math.min(this.speedX + newSpeedX, this.maxSpeedX);
     }
 
+    int newSpeedY = random.nextInt(2);
     // Update speedY based on its current direction and ensure it does not exceed maxSpeedY
     if (this.speedY < 0) {
-      this.speedY = Math.max(this.speedY - 1, -this.maxSpeedY);
+      this.speedY = Math.max(this.speedY - newSpeedY, -this.maxSpeedY);
     } else {
-      this.speedY = Math.min(this.speedY + 1, this.maxSpeedY);
+      this.speedY = Math.min(this.speedY + newSpeedY, this.maxSpeedY);
     }
   }
 
