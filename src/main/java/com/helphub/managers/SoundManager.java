@@ -27,9 +27,11 @@ public class SoundManager {
 
       // Ajustar el volumen
       FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-      float min = volumeControl.getMinimum();
-      float max = volumeControl.getMaximum();
-      float gain = (Config.volume / 100.0f) * (max - min) + min;
+      float min = volumeControl.getMinimum(); // Mínimo en dB, probablemente un valor negativo
+      float max = volumeControl.getMaximum(); // Máximo en dB, probablemente 0 dB
+
+      // Mapear el valor de volumen (0-100) a la escala de dB
+      float gain = min + (max - min) * (Config.volume / 100.0F);
       volumeControl.setValue(gain);
 
       clip.start();

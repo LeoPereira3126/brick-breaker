@@ -15,6 +15,7 @@ public class Text extends Rectangle {
   private Align align;
   private Text homie;
   private Side side;
+  public boolean disabled = false;
 
   /**
    * Constructor de Button.
@@ -71,7 +72,7 @@ public class Text extends Rectangle {
    */
   public void draw(Graphics2D g2) {
     g2.setFont(this.font);
-    g2.setColor(this.color);
+    g2.setColor(this.disabled ? Color.GRAY : this.color);
     g2.drawString(this.content, this.x, this.y + this.height);  // Dibujamos el texto
   }
 

@@ -1,6 +1,7 @@
 package com.helphub.stages;
 
 import com.helphub.BrickBreaker;
+import com.helphub.Config;
 import com.helphub.enums.Align;
 import com.helphub.base.BaseMenu;
 import com.helphub.utilities.Button;
@@ -14,20 +15,27 @@ import java.awt.event.MouseEvent;
 public class GameOverStage implements BaseMenu {
   private BrickBreaker game;
 
+  private Text gameOverTitle;
+
   private Button restartButton;
   private Button mainMenuButton;
 
   public GameOverStage(BrickBreaker game) {
     this.game = game;
+    if (this.game.executor != null) this.game.executor.shutdownNow();
 
-    restartButton = new Button("Restart", Fonts.SMALL, Color.white, this.game.width / 2, 600, Align.CENTER);
+    if (this.game.brickManager.getRemainingBricks() == 0) {
+      gameOverTitle = new Text("!Congratulations!", Fonts.XL, Color.green, Config.screenWidth / 2, Config.scaleByY(300), Align.CENTER);
+    } else gameOverTitle = new Text("Game over", Fonts.XL, Color.RED, Config.screenWidth / 2, Config.scaleByY(300), Align.CENTER);
+
+    restartButton = new Button("Restart", Fonts.SM, Color.white, Config.screenWidth / 2, Config.scaleByY(600), Align.CENTER);
     restartButton.setOnClick(() -> {
       this.game.removeMouseListener(this);
       this.game.gameStage.reset();
       this.game.stage = this.game.gameStage;
     });
 
-    mainMenuButton = new Button("Main menu", Fonts.SMALL, Color.white, 0, 0, Align.CENTER);
+    mainMenuButton = new Button("Main menu", Fonts.SM, Color.white, 0, 0, Align.CENTER);
     mainMenuButton.setOnClick(() -> {
       this.game.removeMouseListener(this);
       this.game.addMouseListener(this.game.menuStage);
@@ -43,9 +51,7 @@ public class GameOverStage implements BaseMenu {
 
   @Override
   public void draw(Graphics2D g2) {
-    if (this.game.brickManager.getRemainingBricks() == 0) {
-      Text.draw(g2, "!Congratulations!", Fonts.XL, Color.green, this.game.width/2, 300, Align.CENTER);
-    } else Text.draw(g2, "Game over", Fonts.XL, Color.RED, this.game.width / 2, 300, Align.CENTER);
+    gameOverTitle.draw(g2);
 
     restartButton.draw(g2);
     mainMenuButton.draw(g2);

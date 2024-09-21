@@ -23,11 +23,6 @@ public class KeyManager implements KeyListener {
   }
 
   @Override
-  public void keyTyped(KeyEvent e) {
-    // This method is not used but needs to be implemented as part of the KeyListener interface.
-  }
-
-  @Override
   public void keyPressed(KeyEvent e) {
     // Get the code of the key that was pressed.
     int code = e.getKeyCode();
@@ -69,6 +64,11 @@ public class KeyManager implements KeyListener {
     if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) {
       isMovingRight = false;
     }
+  }
+
+  @Override
+  public void keyTyped(KeyEvent e) {
+    // This method is not used but needs to be implemented as part of the KeyListener interface.
   }
 }
 

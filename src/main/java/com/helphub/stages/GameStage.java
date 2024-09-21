@@ -1,6 +1,7 @@
 package com.helphub.stages;
 
 import com.helphub.Config;
+import com.helphub.base.Entity;
 import com.helphub.entities.Ball;
 import com.helphub.entities.Player;
 import com.helphub.managers.BrickManager;
@@ -23,9 +24,9 @@ public class GameStage implements Stage {
   public KeyManager keyManager;
 
   // Map boundaries
-  public Rectangle leftBoundary;
-  public Rectangle rightBoundary;
-  public Rectangle topBoundary;
+  public Entity leftBoundary;
+  public Entity rightBoundary;
+  public Entity topBoundary;
 
   // Add standing_by flag to GameStage
   public boolean standing_by = true;
@@ -38,11 +39,11 @@ public class GameStage implements Stage {
 
     // Initialize entities
     this.player = new Player(game);
-    this.ball = new Ball(this);
+    this.ball = new Ball();
 
-    leftBoundary = new Rectangle(0, 0, 10, game.height);
-    rightBoundary = new Rectangle(game.width - 10, 0, 10, game.height);
-    topBoundary = new Rectangle(0, 0, game.width, 10);
+    leftBoundary = new Entity(0, 0, Config.scaleByX(10), Config.screenHeight);
+    rightBoundary = new Entity(Config.screenWidth - Config.scaleByX(10), 0, Config.scaleByX(10), Config.screenHeight);
+    topBoundary = new Entity(0, 0, Config.screenWidth, Config.scaleByY(10));
 
     this.reset();
   }
@@ -50,15 +51,17 @@ public class GameStage implements Stage {
   @Override
   public void update() {
     if (!this.standing_by) {
-      if (keyManager.isMovingLeft) {
-        player.slide("left");
-      }
-      if (keyManager.isMovingRight) {
-        player.slide("right");
-      }
+      this.game.executor.submit(() -> {
+        if (keyManager.isMovingLeft) {
+          player.slide("left");
+        }
+        if (keyManager.isMovingRight) {
+          player.slide("right");
+        }
+      });
 
-      ball.update(this);
-      brickManager.checkCollision(ball);
+      this.game.executor.submit(() -> ball.update(this));
+      this.game.executor.submit(() -> brickManager.checkCollision(ball));
 
       if (brickManager.getRemainingBricks() == 0) {
         this.game.addMouseListener(this.game.gameOverStage);
@@ -80,7 +83,7 @@ public class GameStage implements Stage {
     brickManager.draw(g2);
 
     if (this.standing_by) {
-      Text.draw(g2, "Press space to start", Fonts.BIG, Color.orange, this.game.width / 2, 400, Align.CENTER);
+      Text.draw(g2, "Press space to start", Fonts.BIG, Color.orange, Config.screenWidth / 2, Config.scaleByY(400), Align.CENTER);
     }
   }
 
