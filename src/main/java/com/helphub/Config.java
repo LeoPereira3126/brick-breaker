@@ -10,14 +10,14 @@ public class Config {
 
   private static int BASE_SCREEN_WIDTH = 1600;
   private static int BASE_SCREEN_HEIGHT = 900;
+  public static int FPS = 60;
 
   // Variables de configuración
-  public static int volume = 80;
-  public static boolean debugMode = false;
-  public static boolean showFPS = false;
-  public static int maxFPS = 60;
-  public static int screenWidth = 1920;
-  public static int screenHeight = 1080;
+  public static int volume;
+  public static boolean debugMode;
+  public static boolean showFPS;
+  public static int screenWidth;
+  public static int screenHeight;
 
   // Guardar configuraciones
   public static void save() {
@@ -27,7 +27,7 @@ public class Config {
     properties.setProperty("volume", String.valueOf(volume));
     properties.setProperty("debugMode", String.valueOf(debugMode));
     properties.setProperty("showFPS", String.valueOf(showFPS));
-    properties.setProperty("maxFPS", String.valueOf(maxFPS));
+//    properties.setProperty("maxFPS", String.valueOf(FPS));
     properties.setProperty("screenWidth", String.valueOf(screenWidth));
     properties.setProperty("screenHeight", String.valueOf(screenHeight));
 
@@ -44,17 +44,18 @@ public class Config {
 
     try (FileInputStream input = new FileInputStream(CONFIG_FILE)) {
       properties.load(input);
-
-      // Convertir los valores de cadena a sus tipos correspondientes
-      volume = Integer.parseInt(properties.getProperty("volume", "80"));
-      debugMode = Boolean.parseBoolean(properties.getProperty("debugMode", "false"));
-      debugMode = Boolean.parseBoolean(properties.getProperty("showFPS", "false"));
-      debugMode = Boolean.parseBoolean(properties.getProperty("maxFPS", "60"));
-      screenWidth = Integer.parseInt(properties.getProperty("screenWidth", "1920"));
-      screenHeight = Integer.parseInt(properties.getProperty("screenHeight", "1080"));
     } catch (IOException e) {
       e.printStackTrace();
     }
+
+    volume = Integer.parseInt(properties.getProperty("volume", "80"));
+    debugMode = Boolean.parseBoolean(properties.getProperty("debugMode", "false"));
+    showFPS = Boolean.parseBoolean(properties.getProperty("showFPS", "false"));
+//    FPS = Integer.parseInt(properties.getProperty("maxFPS", "60"));
+    screenWidth = Integer.parseInt(properties.getProperty("screenWidth", "1280"));
+    screenHeight = Integer.parseInt(properties.getProperty("screenHeight", "720"));
+
+    save();
   }
 
   public static String getResolution() {

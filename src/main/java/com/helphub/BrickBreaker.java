@@ -71,7 +71,7 @@ public class BrickBreaker extends JPanel implements Runnable {
 
   @Override
   public void run() {
-    double interval = (double) 1_000_000_000 / Config.maxFPS;
+    double interval = (double) 1_000_000_000 / Config.FPS;
     double delta = 0;
     long lastTime = System.nanoTime();
     long currentTime;

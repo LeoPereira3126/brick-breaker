@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class SettingsStage implements BaseMenu {
   private BrickBreaker game;
-  private String[] resolutions = {"800x600", "1280x720", "1360x768", "1366x768", "1600x900", "1920x1080"};
+  private String[] resolutions = {"800x600", "1280x720", "1360x768", "1366x768", "1600x900", "1920x1080", "2560x1440"};
 
   // TODO: Maybe?
   //  Bricks color
@@ -47,8 +47,8 @@ public class SettingsStage implements BaseMenu {
   private Button showFPSSwitch;
 
   // Max fps
-  private Text maxFPSLabel;
-  private Button maxFPSSwitch;
+//  private Text maxFPSLabel;
+//  private Button maxFPSSwitch;
 
   // Resolution
   private Text resolutionLabel;
@@ -188,14 +188,14 @@ public class SettingsStage implements BaseMenu {
       showFPSSwitch.setContent(Config.showFPS ? "Yes" : "No");
     });
 
-    // Max fps
-    maxFPSLabel = new Text("Max FPS", Fonts.MD, Color.white, Config.screenWidth / 2, Config.scaleByY(675), Align.CENTER);
-    maxFPSSwitch = new Button(String.valueOf(Config.maxFPS), Fonts.SM, Color.ORANGE, 0, 0, Align.CENTER);
-    maxFPSSwitch.placeNextTo(maxFPSLabel, Side.BELOW);
-    maxFPSSwitch.setOnClick(() -> {
-      Config.maxFPS = Config.maxFPS == 30 ? 60 : 30;
-      maxFPSSwitch.setContent(String.valueOf(Config.maxFPS));
-    });
+//    // Max fps
+//    maxFPSLabel = new Text("Max FPS", Fonts.MD, Color.white, Config.screenWidth / 2, Config.scaleByY(675), Align.CENTER);
+//    maxFPSSwitch = new Button(String.valueOf(Config.maxFPS), Fonts.SM, Color.ORANGE, 0, 0, Align.CENTER);
+//    maxFPSSwitch.placeNextTo(maxFPSLabel, Side.BELOW);
+//    maxFPSSwitch.setOnClick(() -> {
+//      Config.maxFPS = Config.maxFPS == 30 ? 60 : 30;
+//      maxFPSSwitch.setContent(String.valueOf(Config.maxFPS));
+//    });
 
     // Back button
     backButton = new Button("Back", Fonts.SM, Color.ORANGE, Config.screenWidth / 2, Config.scaleByY(825), Align.CENTER);
@@ -234,8 +234,8 @@ public class SettingsStage implements BaseMenu {
     this.showFPSSwitch.draw(g2);
 
     // Max fps
-    this.maxFPSLabel.draw(g2);
-    this.maxFPSSwitch.draw(g2);
+//    this.maxFPSLabel.draw(g2);
+//    this.maxFPSSwitch.draw(g2);
 
     // Resolution
     this.resolutionLabel.draw(g2);
@@ -256,8 +256,8 @@ public class SettingsStage implements BaseMenu {
       debugModeSwitch.click();
     } else if (showFPSSwitch.contains(cursorPoint)) {
       showFPSSwitch.click();
-    } else if (maxFPSSwitch.contains(cursorPoint)) {
-      maxFPSSwitch.click();
+//    } else if (maxFPSSwitch.contains(cursorPoint)) {
+//      maxFPSSwitch.click();
     } else if (minusResolutionButton.contains(cursorPoint)) {
       minusResolutionButton.click();
     } else if (plusResolutionButton.contains(cursorPoint)) {

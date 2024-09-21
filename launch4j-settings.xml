@@ -3,7 +3,7 @@
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
   <jar>D:\HelpHub\Desktop\java\brick-breaker\out\artifacts\java_game_jar\java-game.jar</jar>
-  <outfile>D:\HelpHub\Desktop\BrickBreaker-v0.2.2.exe</outfile>
+  <outfile>D:\HelpHub\Desktop\BrickBreaker-v0.2.4.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -14,6 +14,10 @@
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
   <icon>D:\HelpHub\Desktop\java\brick-breaker\src\main\resources\icon.ico</icon>
+  <singleInstance>
+    <mutexName>brick-breaker</mutexName>
+    <windowTitle></windowTitle>
+  </singleInstance>
   <jre>
     <path>C:\Program Files\Java\jdk-22</path>
     <requiresJdk>false</requiresJdk>

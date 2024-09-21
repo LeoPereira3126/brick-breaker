@@ -107,8 +107,8 @@ public class Ball extends Entity {
     double deltaTime = Math.min(0.1, (currentTime - this.lastUpdateTime) / 1e9); // Convertir nanosegundos a segundos
 
     // Mover la bola proporcionalmente al tiempo transcurrido
-    moveX((int) (speedX * deltaTime * Config.maxFPS)); // Multiplicar por 60 para suavizar el movimiento
-    moveY((int) (speedY * deltaTime * Config.maxFPS));
+    moveX((int) (speedX * deltaTime * Config.FPS)); // Multiplicar por 60 para suavizar el movimiento
+    moveY((int) (speedY * deltaTime * Config.FPS));
 
     this.lastUpdateTime = currentTime;
 
