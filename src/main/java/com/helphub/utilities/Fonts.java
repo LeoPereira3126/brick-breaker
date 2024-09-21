@@ -21,5 +21,5 @@ public class Fonts {
   public static final Font XXL = BIG.deriveFont((float) Config.scaleByY(100));
   public static final Font MD = BIG.deriveFont((float) Config.scaleByY(50));
   public static final Font SM = BIG.deriveFont((float) Config.scaleByY(35));
-  public static final Font XS = BIG.deriveFont((float) Config.scaleByY(15));
+  public static final Font XS = BIG.deriveFont((float) Config.scaleByY(20));
 }

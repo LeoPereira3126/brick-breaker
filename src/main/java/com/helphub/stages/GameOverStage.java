@@ -22,6 +22,7 @@ public class GameOverStage implements BaseMenu {
 
   public GameOverStage(BrickBreaker game) {
     this.game = game;
+    if (this.game.executor != null) this.game.executor.shutdownNow();
 
     if (this.game.brickManager.getRemainingBricks() == 0) {
       gameOverTitle = new Text("!Congratulations!", Fonts.XL, Color.green, Config.screenWidth / 2, Config.scaleByY(300), Align.CENTER);

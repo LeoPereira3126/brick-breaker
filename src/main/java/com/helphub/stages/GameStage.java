@@ -1,6 +1,7 @@
 package com.helphub.stages;
 
 import com.helphub.Config;
+import com.helphub.base.Entity;
 import com.helphub.entities.Ball;
 import com.helphub.entities.Player;
 import com.helphub.managers.BrickManager;
@@ -23,9 +24,9 @@ public class GameStage implements Stage {
   public KeyManager keyManager;
 
   // Map boundaries
-  public Rectangle leftBoundary;
-  public Rectangle rightBoundary;
-  public Rectangle topBoundary;
+  public Entity leftBoundary;
+  public Entity rightBoundary;
+  public Entity topBoundary;
 
   // Add standing_by flag to GameStage
   public boolean standing_by = true;
@@ -40,9 +41,9 @@ public class GameStage implements Stage {
     this.player = new Player(game);
     this.ball = new Ball();
 
-    leftBoundary = new Rectangle(0, 0, Config.scaleByX(10), Config.screenHeight);
-    rightBoundary = new Rectangle(Config.screenWidth - Config.scaleByX(10), 0, Config.scaleByX(10), Config.screenHeight);
-    topBoundary = new Rectangle(0, 0, Config.screenWidth, Config.scaleByY(10));
+    leftBoundary = new Entity(0, 0, Config.scaleByX(10), Config.screenHeight);
+    rightBoundary = new Entity(Config.screenWidth - Config.scaleByX(10), 0, Config.scaleByX(10), Config.screenHeight);
+    topBoundary = new Entity(0, 0, Config.screenWidth, Config.scaleByY(10));
 
     this.reset();
   }
@@ -50,15 +51,17 @@ public class GameStage implements Stage {
   @Override
   public void update() {
     if (!this.standing_by) {
-      if (keyManager.isMovingLeft) {
-        player.slide("left");
-      }
-      if (keyManager.isMovingRight) {
-        player.slide("right");
-      }
+      this.game.executor.submit(() -> {
+        if (keyManager.isMovingLeft) {
+          player.slide("left");
+        }
+        if (keyManager.isMovingRight) {
+          player.slide("right");
+        }
+      });
 
-      ball.update(this);
-      brickManager.checkCollision(ball);
+      this.game.executor.submit(() -> ball.update(this));
+      this.game.executor.submit(() -> brickManager.checkCollision(ball));
 
       if (brickManager.getRemainingBricks() == 0) {
         this.game.addMouseListener(this.game.gameOverStage);

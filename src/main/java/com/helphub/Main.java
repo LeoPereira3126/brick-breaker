@@ -46,7 +46,6 @@ public class Main {
     window.setTitle("BrickBreaker");
 
     window.setUndecorated(true);  // Eliminar bordes de la ventana
-    window.setResizable(false);   // No permitir cambiar el tamaño
 
     GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
@@ -63,7 +62,7 @@ public class Main {
     window.setLocationRelativeTo(null);
 
     // Establecer el JFrame en modo de pantalla completa
-    graphicsDevice.setFullScreenWindow(window);
+//    graphicsDevice.setFullScreenWindow(window);
 
     // Make the window visible
     window.setVisible(true);

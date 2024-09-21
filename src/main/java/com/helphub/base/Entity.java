@@ -8,12 +8,20 @@ import java.awt.*;
  * Abstract base class for all entities in the game.
  * Provides common properties and methods for manipulating game entities.
  */
-public abstract class Entity extends Rectangle {
+public class Entity {
   // Reference to the game window (JPanel) where the entity will be drawn
   public BrickBreaker game;
-
-  // Color of the entity
+  public int x, y, width, height;
   public Color color = Color.white;
+
+  public Entity(int x, int y, int width, int height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+  }
+
+  public Entity() {}
 
   /**
    * Moves the entity horizontally by the specified number of pixels.
@@ -41,6 +49,10 @@ public abstract class Entity extends Rectangle {
    */
   public void draw(Graphics2D g2) {
     g2.setColor(this.color);
-    g2.fill(this);
+    g2.fillRect(this.x, this.y, this.width, this.height);
+  }
+
+  public boolean intersects(Entity other) {
+    return other.x >= this.x && other.x <= (this.x + this.width) && other.y >= this.y && other.y <= (this.y + this.height);
   }
 }

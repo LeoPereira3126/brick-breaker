@@ -7,9 +7,16 @@ import com.helphub.entities.Brick;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class BrickManager {
+
+  // Pool de hilos con un número fijo de hilos basado en los núcleos del sistema.
+  private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
   // List to store all the bricks.
   private ArrayList<Brick> bricks = new ArrayList<>();
@@ -22,17 +29,11 @@ public class BrickManager {
   // Number of rows and columns of bricks.
   private final int rows = 5;
 
-  // Reference to the game instance (BlockBreaker) to interact with other game elements.
-  private BrickBreaker game;
-
   /**
-   * Constructs a BrickManager with a reference to the game instance.
+   * Constructs a BrickManager.
    * Initializes the BrickManager and generates the initial set of bricks.
-   *
-   * @param game the game instance used to interact with other game elements
    */
-  public BrickManager(BrickBreaker game) {
-    this.game = game;
+  public BrickManager() {
     this.generateBricks(); // Generate the initial set of bricks when the game starts.
   }
 
@@ -56,19 +57,37 @@ public class BrickManager {
    * @param ball the ball instance used to check for collisions with the bricks
    */
   public void checkCollision(Ball ball) {
-    // Remove any brick that the ball collides with.
-    bricks.removeIf(brick -> {
-      if (ball.intersects(brick) || ball.prediction.intersects(brick)) {
-        // Determine the side of the brick that was hit and bounce the ball accordingly.
-        String side = ball.getCollisionSide(brick);
-        // Handle the ball's bounce based on the collision side.
-        ball.bounce(side);
-        // Remove the brick from the list if it was hit.
-        return true;
-      }
-      // If no collision, the brick stays.
-      return false;
-    });
+    // Dividir los ladrillos en fragmentos para distribuir entre hilos.
+//    int chunkSize = bricks.size() / Runtime.getRuntime().availableProcessors();
+    int chunkSize = bricks.size() / 4;
+    List<Callable<Void>> tasks = new ArrayList<>();
+
+    for (int i = 0; i < bricks.size(); i += chunkSize) {
+      // Creamos un sublista de ladrillos.
+      List<Brick> brickChunk = bricks.subList(i, Math.min(i + chunkSize, bricks.size()));
+
+      // Añadir tarea de colisión para el chunk actual.
+      tasks.add(() -> {
+        // Verificar colisiones para este grupo de ladrillos.
+        brickChunk.removeIf(brick -> {
+          if (ball.intersects(brick) || ball.predictionIntersects(brick)) {
+            // Manejo de colisiones.
+            String side = ball.getCollisionSide(brick);
+            ball.bounce(side);
+            return true;
+          }
+          return false;
+        });
+        return null;
+      });
+    }
+
+    try {
+      // Ejecutar las tareas de colisión en paralelo.
+      executor.invokeAll(tasks);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
   /**

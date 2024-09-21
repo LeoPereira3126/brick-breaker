@@ -28,6 +28,7 @@ public class Ball extends Entity {
   private final int maxSpeedY = baseSpeedY * 3;
 
   public Line2D.Double prediction;
+  private long lastUpdateTime = System.nanoTime();
 
   public Ball() {
     this.reset();
@@ -101,30 +102,36 @@ public class Ball extends Entity {
    * @param gameStage the game stage used to check for collisions with its edges and entities
    */
   public void update(GameStage gameStage) {
-    // Move the ball based on its current speed
-    moveX(speedX);
-    moveY(speedY);
+    long currentTime = System.nanoTime();
+    // Limitar deltaTime para evitar valores extremadamente altos que causen saltos grandes
+    double deltaTime = Math.min(0.1, (currentTime - this.lastUpdateTime) / 1e9); // Convertir nanosegundos a segundos
+
+    // Mover la bola proporcionalmente al tiempo transcurrido
+    moveX((int) (speedX * deltaTime * Config.maxFPS)); // Multiplicar por 60 para suavizar el movimiento
+    moveY((int) (speedY * deltaTime * Config.maxFPS));
+
+    this.lastUpdateTime = currentTime;
 
     this.prediction.x1 = this.x + (double) this.width / 2;
     this.prediction.y1 = this.y + (double) this.height / 2;
     this.prediction.x2 = this.x + (double) this.width / 2 + this.speedX * 2;
     this.prediction.y2 = this.y + (double) this.height / 2 + this.speedY * 2;
 
-    if (this.prediction.intersects(gameStage.player) || this.intersects(gameStage.player)) {
+    if (this.predictionIntersects(gameStage.player) || this.intersects(gameStage.player)) {
       this.bounce("bottom");
       gameStage.player.upgrade();
       this.upgrade();
     }
 
-    if (this.prediction.intersects(gameStage.leftBoundary) || this.intersects(gameStage.leftBoundary)) {
+    if (this.predictionIntersects(gameStage.leftBoundary) || this.intersects(gameStage.leftBoundary)) {
       this.bounce("left");
     }
 
-    if (this.prediction.intersects(gameStage.rightBoundary) || this.intersects(gameStage.rightBoundary)) {
+    if (this.predictionIntersects(gameStage.rightBoundary) || this.intersects(gameStage.rightBoundary)) {
       this.bounce("right");
     }
 
-    if (this.prediction.intersects(gameStage.topBoundary) || this.intersects(gameStage.topBoundary)) {
+    if (this.predictionIntersects(gameStage.topBoundary) || this.intersects(gameStage.topBoundary)) {
       this.bounce("top");
     }
 
@@ -193,5 +200,17 @@ public class Ball extends Entity {
     } else {
       return "right";
     }
+  }
+
+  public boolean predictionIntersects(Entity other) {
+    int x1 = (int) this.prediction.x1;
+    int x2 = (int) this.prediction.x2;
+    int y1 = (int) this.prediction.y1;
+    int y2 = (int) this.prediction.y2;
+
+    boolean intersects1 = x1 >= other.x && x1 <= (other.x + other.width) && y1 >= other.y && y1 <= (other.y + other.height);
+    boolean intersects2 = x2 >= other.x && x2 <= (other.x + other.width) && y2 >= other.y && y2 <= (other.y + other.height);
+
+    return intersects1 || intersects2;
   }
 }

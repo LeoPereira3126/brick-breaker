@@ -49,8 +49,7 @@ public class MenuStage implements BaseMenu {
   }
 
   @Override
-  public void update() {
-  }
+  public void update() {}
 
   @Override
   public void draw(Graphics2D g2) {
