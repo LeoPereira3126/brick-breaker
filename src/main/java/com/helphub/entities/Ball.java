@@ -73,7 +73,7 @@ public class Ball extends Entity {
    */
   public void reset() {
     this.x = Config.screenWidth / 2 - this.width / 2;
-    this.y = (int)(Config.screenHeight * 0.75);
+    this.y = (int) (Config.screenHeight * 0.75);
     this.speedX = this.baseSpeedX;
     this.speedY = -this.baseSpeedY;
   }
@@ -123,15 +123,15 @@ public class Ball extends Entity {
       this.upgrade();
     }
 
-    if (this.predictionIntersects(gameStage.leftBoundary) || this.intersects(gameStage.leftBoundary)) {
+    if (this.prediction.x1 <= 0 || this.prediction.x2 <= 0 || this.x <= 0) {
       this.bounce("left");
     }
 
-    if (this.predictionIntersects(gameStage.rightBoundary) || this.intersects(gameStage.rightBoundary)) {
+    if (this.prediction.x1 >= Config.screenWidth || this.prediction.x2 >= Config.screenWidth || this.x >= Config.screenWidth) {
       this.bounce("right");
     }
 
-    if (this.predictionIntersects(gameStage.topBoundary) || this.intersects(gameStage.topBoundary)) {
+    if (this.prediction.y1 <= 0 || this.prediction.y2 <= 0 || this.x <= 0) {
       this.bounce("top");
     }
 
@@ -139,7 +139,8 @@ public class Ball extends Entity {
       gameStage.game.addMouseListener(gameStage.game.gameOverStage);
       gameStage.game.stage = gameStage.game.gameOverStage;
       SoundManager.playSound("Game-Over.wav");
-    };
+    }
+    ;
   }
 
   /**

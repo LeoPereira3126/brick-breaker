@@ -5,7 +5,7 @@
   <jar>D:\HelpHub\Desktop\java\brick-breaker\out\artifacts\java_game_jar\java-game.jar</jar>
   <outfile>D:\HelpHub\Desktop\BrickBreaker-v0.2.4.exe</outfile>
   <errTitle></errTitle>
-  <cmdLine></cmdLine>
+  <cmdLine>-Xms256m -Xmx512m</cmdLine>
   <chdir>.</chdir>
   <priority>normal</priority>
   <downloadUrl></downloadUrl>
