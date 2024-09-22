@@ -47,7 +47,7 @@ public class Main {
 
     window.setUndecorated(true);  // Eliminar bordes de la ventana
 
-    GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+//    GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
     // Create a new instance of the BlockBreaker game panel
     BrickBreaker game = new BrickBreaker(window);
@@ -62,7 +62,7 @@ public class Main {
     window.setLocationRelativeTo(null);
 
     // Establecer el JFrame en modo de pantalla completa
-    graphicsDevice.setFullScreenWindow(window);
+//    graphicsDevice.setFullScreenWindow(window);
 
     // Make the window visible
     window.setVisible(true);

@@ -117,7 +117,7 @@ public class Ball extends Entity {
     this.prediction.x2 = this.x + (double) this.width / 2 + this.speedX * 2;
     this.prediction.y2 = this.y + (double) this.height / 2 + this.speedY * 2;
 
-    if (this.predictionIntersects(gameStage.player) || this.intersects(gameStage.player)) {
+    if ((this.predictionIntersects(gameStage.player) || this.intersects(gameStage.player)) && this.speedY > 0) {
       this.bounce("bottom");
       gameStage.player.upgrade();
       this.upgrade();
