@@ -8,35 +8,42 @@ import java.net.URL;
 
 public class SoundManager {
 
+  /**
+   * Plays a sound from the specified file.
+   *
+   * @param soundFile the name of the sound file to be played
+   */
   public static void playSound(String soundFile) {
     try {
-      // Cargar el archivo de sonido desde el classpath
+      // Load the sound file from the classpath
       URL url = SoundManager.class.getResource("/sounds/" + soundFile);
       if (url == null) {
-        throw new IllegalArgumentException("Archivo de sonido no encontrado: " + soundFile);
+        throw new IllegalArgumentException("Sound file not found: " + soundFile); // Throws an exception if the file is not found.
       }
+
+      // Create an audio input stream from the sound file
       AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
 
-      // Obtener el formato de audio
+      // Get the audio format from the input stream
       AudioFormat format = audioInputStream.getFormat();
-      DataLine.Info info = new DataLine.Info(Clip.class, format);
+      DataLine.Info info = new DataLine.Info(Clip.class, format); // Specify that we want a Clip line.
 
-      // Abrir y reproducir el sonido
+      // Open the sound clip and prepare it for playback
       Clip clip = (Clip) AudioSystem.getLine(info);
       clip.open(audioInputStream);
 
-      // Ajustar el volumen
+      // Adjust the volume
       FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-      float min = volumeControl.getMinimum(); // Mínimo en dB, probablemente un valor negativo
-      float max = volumeControl.getMaximum(); // Máximo en dB, probablemente 0 dB
+      float min = volumeControl.getMinimum(); // Minimum volume in dB (likely a negative value)
+      float max = volumeControl.getMaximum(); // Maximum volume in dB (likely 0 dB)
 
-      // Mapear el valor de volumen (0-100) a la escala de dB
+      // Map the volume value (0-100) to the dB scale
       float gain = min + (max - min) * (Config.volume / 100.0F);
-      volumeControl.setValue(gain);
+      volumeControl.setValue(gain); // Set the gain to the calculated value.
 
-      clip.start();
+      clip.start(); // Start playing the sound clip.
     } catch (UnsupportedAudioFileException | IOException | LineUnavailableException | IllegalArgumentException e) {
-      e.printStackTrace();
+      e.printStackTrace(); // Print the stack trace if an error occurs.
     }
   }
 }

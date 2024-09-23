@@ -1,11 +1,12 @@
 package com.helphub.loaders;
 
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * The FontLoader class is responsible for loading custom fonts from resources and registering them with the GraphicsEnvironment.
+ */
 public class FontLoader {
 
   /**
@@ -18,23 +19,25 @@ public class FontLoader {
    * @throws IOException         If an I/O error occurs while reading the file.
    */
   public static Font loadCustomFont(String resourcePath, float fontSize) throws FontFormatException, IOException {
-    // Usamos ClassLoader para cargar el archivo desde la carpeta de recursos
+    // Use ClassLoader to load the font file from the resources folder
     InputStream fontStream = FontLoader.class.getResourceAsStream("/fonts/" + resourcePath);
 
+    // Check if the InputStream is null, indicating that the font file was not found
     if (fontStream == null) {
-      throw new IOException("No se pudo encontrar el archivo de fuente: " + resourcePath);
+      throw new IOException("Could not find font file: " + resourcePath);
     }
 
-    // Cargamos la fuente desde el InputStream
+    // Load the font from the InputStream
     Font customFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
 
-    // Ajustamos el tamaño de la fuente
+    // Derive a new font with the specified size
     customFont = customFont.deriveFont(fontSize);
 
-    // Registramos la fuente en el entorno gráfico
+    // Register the font in the graphics environment
     GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
     ge.registerFont(customFont);
 
+    // Return the loaded font
     return customFont;
   }
 }

@@ -1,6 +1,5 @@
 package com.helphub.managers;
 
-import com.helphub.BrickBreaker;
 import com.helphub.Config;
 import com.helphub.entities.Ball;
 import com.helphub.entities.Brick;
@@ -15,19 +14,16 @@ import java.util.concurrent.Executors;
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class BrickManager {
 
-  // Pool de hilos con un número fijo de hilos basado en los núcleos del sistema.
+  // Thread pool with a fixed number of threads based on system cores.
   private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-
-  // List to store all the bricks.
-  private ArrayList<Brick> bricks = new ArrayList<>();
-
   // Spacing between bricks.
   private final int spacing = 5;
-
+  // Number of columns of bricks.
   private final int cols = 28;
-
-  // Number of rows and columns of bricks.
+  // Number of rows of bricks.
   private final int rows = 5;
+  // List to store all the bricks.
+  private ArrayList<Brick> bricks = new ArrayList<>();
 
   /**
    * Constructs a BrickManager.
@@ -57,36 +53,36 @@ public class BrickManager {
    * @param ball the ball instance used to check for collisions with the bricks
    */
   public void checkCollision(Ball ball) {
-    // Dividir los ladrillos en fragmentos para distribuir entre hilos.
-//    int chunkSize = bricks.size() / Runtime.getRuntime().availableProcessors();
-    int chunkSize = bricks.size() / 4;
+    // Divide the bricks into chunks for parallel processing.
+    int chunkSize = bricks.size() / 4; // Change to use a fixed chunk size of 4
     List<Callable<Void>> tasks = new ArrayList<>();
 
     for (int i = 0; i < bricks.size(); i += chunkSize) {
-      // Creamos un sublista de ladrillos.
+      // Create a sublist of bricks for the current chunk.
       List<Brick> brickChunk = bricks.subList(i, Math.min(i + chunkSize, bricks.size()));
 
-      // Añadir tarea de colisión para el chunk actual.
+      // Add collision task for the current chunk.
       tasks.add(() -> {
-        // Verificar colisiones para este grupo de ladrillos.
+        // Check for collisions for this chunk of bricks.
         brickChunk.removeIf(brick -> {
+          // Check if the ball intersects with the brick or its prediction.
           if (ball.intersects(brick) || ball.predictionIntersects(brick)) {
-            // Manejo de colisiones.
+            // Handle collision by determining the side of collision.
             String side = ball.getCollisionSide(brick);
-            ball.bounce(side);
-            return true;
+            ball.bounce(side); // Make the ball bounce off the brick.
+            return true; // Remove the brick from the list.
           }
-          return false;
+          return false; // Keep the brick if no collision.
         });
-        return null;
+        return null; // Return null as the Callable does not need to return a value.
       });
     }
 
     try {
-      // Ejecutar las tareas de colisión en paralelo.
+      // Execute the collision tasks in parallel.
       executor.invokeAll(tasks);
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      e.printStackTrace(); // Print the stack trace in case of interruption.
     }
   }
 
@@ -104,41 +100,39 @@ public class BrickManager {
    * Initializes the brick list and positions each brick in a grid formation.
    * Each brick is given a color and associated with the game window.
    */
-  // Método para generar los ladrillos en la pantalla.
   public void generateBricks() {
-    // Calculamos el tamaño de los ladrillos, asegurándonos de que quepan en el ancho del juego.
-    // Agregamos un espacio extra para evitar que los ladrillos se superpongan con los bordes.
-    int totalSpacing = spacing * (this.cols + 2); // Espaciado total incluyendo bordes
-    int availableWidth = Config.screenWidth - totalSpacing; // Ancho disponible para ladrillos
-    int brickWidth = availableWidth / this.cols; // Tamaño de cada ladrillo
-    int brickHeight = brickWidth / 2;
+    // Calculate the size of the bricks, ensuring they fit within the game's width.
+    // Add extra spacing to avoid overlap with the edges.
+    int totalSpacing = spacing * (this.cols + 2); // Total spacing including borders
+    int availableWidth = Config.screenWidth - totalSpacing; // Available width for bricks
+    int brickWidth = availableWidth / this.cols; // Size of each brick
+    int brickHeight = brickWidth / 2; // Height set to half the width
 
-    // Verificamos si hay ladrillos restantes antes de inicializar la lista.
+    // Check if there are remaining bricks before initializing the list.
     if (this.getRemainingBricks() > 0) {
-      bricks = new ArrayList<>(); // Inicializamos la lista de ladrillos.
+      bricks = new ArrayList<>(); // Initialize the list of bricks.
     }
 
-    // Recorremos cada fila para posicionar los ladrillos verticalmente.
+    // Loop through each row to position the bricks vertically.
     for (int row = 0; row < rows; row++) {
-      // Recorremos las columnas, limitando el número a 28 para ajustarse a los requisitos.
-      for (int col = 0; col < this.cols; col++) { // Cambiamos el límite a this.cols para que siempre se generen 28 columnas.
+      // Loop through the columns, limiting the number to cols to meet requirements.
+      for (int col = 0; col < this.cols; col++) {
 
-        // Creamos una nueva instancia de ladrillo con el tamaño calculado.
-        Brick brick = new Brick(brickWidth, brickHeight); // Tamaño del ladrillo ajustado para que sea el doble en ancho.
+        // Create a new instance of a brick with the calculated size.
+        Brick brick = new Brick(brickWidth, brickHeight); // Brick width set to calculated width.
 
-        // Posicionamos el ladrillo horizontalmente basado en el índice de la columna y el espaciado.
-        brick.moveX(spacing * 2 + col * (brickWidth + spacing)); // Ajustamos la posición horizontal con el espaciado.
+        // Position the brick horizontally based on the column index and spacing.
+        brick.moveX(spacing * 2 + col * (brickWidth + spacing)); // Adjust horizontal position with spacing.
 
-        // Posicionamos el ladrillo verticalmente basado en el índice de la fila y el espaciado.
-        brick.moveY(spacing * 2 + row * (brickHeight + spacing)); // Ajustamos la posición vertical con el espaciado.
+        // Position the brick vertically based on the row index and spacing.
+        brick.moveY(spacing * 2 + row * (brickHeight + spacing)); // Adjust vertical position with spacing.
 
-        // Establecemos el color del ladrillo usando el modelo de color HSB.
-        brick.color = Color.getHSBColor(270 / 360.0f, 1.0F, 0.8F);
+        // Set the color of the brick using the HSB color model.
+        brick.color = Color.getHSBColor(270 / 360.0f, 1.0F, 0.8F); // Set a fixed color for bricks.
 
-        // Añadimos el ladrillo a la lista de ladrillos.
+        // Add the brick to the list of bricks.
         bricks.add(brick);
       }
     }
   }
-
 }

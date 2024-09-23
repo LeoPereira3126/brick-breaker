@@ -2,242 +2,187 @@ package com.helphub.stages;
 
 import com.helphub.BrickBreaker;
 import com.helphub.Config;
+import com.helphub.base.BaseMenu;
 import com.helphub.enums.Align;
 import com.helphub.enums.Side;
-import com.helphub.base.BaseMenu;
-import com.helphub.utilities.*;
 import com.helphub.utilities.Button;
+import com.helphub.utilities.Fonts;
+import com.helphub.utilities.Text;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
 
 public class SettingsStage implements BaseMenu {
-  private BrickBreaker game;
-  private String[] resolutions = {"800x600", "1280x720", "1360x768", "1366x768", "1600x900", "1920x1080", "2560x1440"};
+  private BrickBreaker game; // Reference to the main game object
+  private String[] resolutions = {"800x600", "1280x720", "1360x768", "1366x768", "1600x900", "1920x1080", "2560x1440"}; // Available resolutions
 
-  // TODO: Maybe?
-  //  Bricks color
-  //  private Button previousBricksColorButton;
-  //  private Button nextBricksColorButton;
-  //  Ball color
-  //  private Button previousBallColorButton;
-  //  private Button nextBallColorButton;
-  //  // Platform color
-  //  private Button previousPlatformColorButton;
-  //  private Button nextPlatformColorButton;
+  // UI Elements
+  private Text settingsTitle; // Title of the settings screen
+  private Button backButton; // Button to return to the previous menu
+  private Text volumeLabel; // Label for volume control
+  private Text volumeValue; // Display for current volume
+  private Button minusVolumeButton; // Button to decrease volume
+  private Button plusVolumeButton; // Button to increase volume
+  private Text debugModeLabel; // Label for debug mode toggle
+  private Button debugModeSwitch; // Button to toggle debug mode
+  private Text showFPSLabel; // Label for showing FPS toggle
+  private Button showFPSSwitch; // Button to toggle showing FPS
+  private Text resolutionLabel; // Label for resolution settings
+  private Text resolutionValue; // Display for current resolution
+  private Button minusResolutionButton; // Button to decrease resolution
+  private Button plusResolutionButton; // Button to increase resolution
 
-  private Text settingsTitle;
-
-  // Back button
-  private Button backButton;
-
-  // Volume
-  private Text volumeLabel;
-  private Text volumeValue;
-  private Button minusVolumeButton;
-  private Button plusVolumeButton;
-
-  // Debug mode
-  private Text debugModeLabel;
-  private Button debugModeSwitch;
-
-  // Show fps
-  private Text showFPSLabel;
-  private Button showFPSSwitch;
-
-  // Max fps
-//  private Text maxFPSLabel;
-//  private Button maxFPSSwitch;
-
-  // Resolution
-  private Text resolutionLabel;
-  private Text resolutionValue;
-  private Button minusResolutionButton;
-  private Button plusResolutionButton;
-
+  // Constructor to initialize the SettingsStage
   public SettingsStage(BrickBreaker game) {
-    this.game = game;
+    this.game = game; // Assign the game reference
 
-    // Title
+    // Title initialization
     this.settingsTitle = new Text("Settings", Fonts.BIG, Color.ORANGE, Config.screenWidth / 2, Config.scaleByY(75), Align.CENTER);
 
-    // Resolution
-    // Inicialización de la etiqueta y el valor de la resolución
+    // Resolution settings
     resolutionLabel = new Text("Resolution", Fonts.MD, Color.white, Config.screenWidth / 2, Config.scaleByY(175), Align.CENTER);
     resolutionValue = new Text(String.format("%sx%s", Config.screenWidth, Config.screenHeight), Fonts.SM, Color.white, 0, 0, Align.CENTER);
     resolutionValue.placeNextTo(resolutionLabel, Side.BELOW);
 
-// Botón para disminuir la resolución
+    // Button to decrease resolution
     minusResolutionButton = new Button("<", Fonts.SM, Color.ORANGE, Config.screenWidth / 2 - Config.scaleByX(125), resolutionValue.y + Config.scaleByY(20), Align.CENTER);
-    minusResolutionButton.disabled = Config.getResolution().equals(this.resolutions[0]);
+    minusResolutionButton.disabled = Config.getResolution().equals(this.resolutions[0]); // Disable if at lowest resolution
     minusResolutionButton.setOnClick(() -> {
-      // Obtener la resolución actual y encontrar su índice en el array de resoluciones
+      // Get current resolution and find its index
       String currentResolution = Config.getResolution();
       int currentIndex = -1;
       for (int i = 0; i < this.resolutions.length; i++) {
         if (Objects.equals(this.resolutions[i], currentResolution)) {
-          currentIndex = i;
+          currentIndex = i; // Store the current index
           break;
         }
       }
 
-      // Si se encuentra el índice
+      // Update resolution if not at minimum
       if (currentIndex > 0) {
-        // Calcular el nuevo índice para la resolución anterior
-        int newIndex = Math.max(0, currentIndex - 1);
+        int newIndex = Math.max(0, currentIndex - 1); // Decrease index
         String newResolution = this.resolutions[newIndex];
 
-        // Actualizar la resolución
+        // Update the resolution and the display
         Config.setResolution(newResolution);
         this.resolutionValue.setContent(newResolution);
 
-        // Mostrar u ocultar los botones en función de los límites
+        // Update button states based on new index
         minusResolutionButton.disabled = newIndex == 0;
         plusResolutionButton.disabled = newIndex == this.resolutions.length - 1;
       }
     });
 
-    // Botón para aumentar la resolución
+    // Button to increase resolution
     plusResolutionButton = new Button(">", Fonts.SM, Color.ORANGE, Config.screenWidth / 2 + Config.scaleByX(125), resolutionValue.y + Config.scaleByY(20), Align.CENTER);
-    plusResolutionButton.disabled = Config.getResolution().equals(this.resolutions[this.resolutions.length - 1]);
+    plusResolutionButton.disabled = Config.getResolution().equals(this.resolutions[this.resolutions.length - 1]); // Disable if at maximum resolution
     plusResolutionButton.setOnClick(() -> {
-      // Obtener la resolución actual y encontrar su índice en el array de resoluciones
+      // Get current resolution and find its index
       String currentResolution = Config.getResolution();
       int currentIndex = -1;
       for (int i = 0; i < this.resolutions.length; i++) {
         if (Objects.equals(this.resolutions[i], currentResolution)) {
-          currentIndex = i;
+          currentIndex = i; // Store the current index
           break;
         }
       }
 
-      // Si se encuentra el índice
+      // Update resolution if not at maximum
       if (currentIndex < this.resolutions.length - 1) {
-        // Calcular el nuevo índice para la siguiente resolución
-        int newIndex = Math.min(this.resolutions.length - 1, currentIndex + 1);
+        int newIndex = Math.min(this.resolutions.length - 1, currentIndex + 1); // Increase index
         String newResolution = this.resolutions[newIndex];
 
-        // Actualizar la resolución
+        // Update the resolution and the display
         Config.setResolution(newResolution);
         this.resolutionValue.setContent(newResolution);
 
-        // Mostrar u ocultar los botones en función de los límites
+        // Update button states based on new index
         minusResolutionButton.disabled = newIndex == 0;
         plusResolutionButton.disabled = newIndex == this.resolutions.length - 1;
       }
     });
 
-
-    // Volume
-    // Inicialización de la etiqueta
+    // Volume settings
     volumeLabel = new Text("Volume", Fonts.MD, Color.white, Config.screenWidth / 2, Config.scaleByY(300), Align.CENTER);
-
-    // Volume value
     volumeValue = new Text(String.valueOf(Config.volume), Fonts.SM, Color.white, 0, 0, Align.CENTER);
     volumeValue.placeNextTo(volumeLabel, Side.BELOW);
 
-    // Botón para disminuir el volumen
+    // Button to decrease volume
     minusVolumeButton = new Button("-", Fonts.SM, Color.ORANGE, Config.screenWidth / 2 - Config.scaleByX(55), volumeValue.y + Config.scaleByY(20), Align.CENTER);
-    minusVolumeButton.disabled = Config.volume == 0;
+    minusVolumeButton.disabled = Config.volume == 0; // Disable if volume is at minimum
     minusVolumeButton.setOnClick(() -> {
-      // Reducir el volumen, asegurándonos de que no baje de 0
+      // Reduce volume, ensuring it doesn't go below 0
       Config.volume = Math.max(0, Config.volume - 5);
       this.volumeValue.setContent(String.valueOf(Config.volume));
 
-      // Ocultar el botón de disminuir si llegamos a 0, mostrar si es mayor a 0
+      // Update button states based on volume level
       minusVolumeButton.disabled = Config.volume == 0;
-
-      // Asegurarse de que el botón de aumentar esté visible mientras el volumen no sea 100
       plusVolumeButton.disabled = Config.volume == 100;
     });
 
-    // Botón para aumentar el volumen
+    // Button to increase volume
     plusVolumeButton = new Button("+", Fonts.SM, Color.ORANGE, Config.screenWidth / 2 + Config.scaleByX(55), volumeValue.y + Config.scaleByY(20), Align.CENTER);
-    plusVolumeButton.disabled = Config.volume == 100;
+    plusVolumeButton.disabled = Config.volume == 100; // Disable if volume is at maximum
     plusVolumeButton.setOnClick(() -> {
-      // Aumentar el volumen, asegurándonos de que no supere 100
+      // Increase volume, ensuring it doesn't exceed 100
       Config.volume = Math.min(100, Config.volume + 5);
       this.volumeValue.setContent(String.valueOf(Config.volume));
 
-      // Ocultar el botón de aumentar si llegamos a 100, mostrar si es menor a 100
+      // Update button states based on volume level
       plusVolumeButton.disabled = Config.volume == 100;
-
-      // Asegurarse de que el botón de disminuir esté visible mientras el volumen no sea 0
       minusVolumeButton.disabled = Config.volume == 0;
     });
 
-
-    // Debug mode
+    // Debug mode settings
     debugModeLabel = new Text("Debug mode", Fonts.MD, Color.white, Config.screenWidth / 2, Config.scaleByY(425), Align.CENTER);
-
-    // Debug switch
     debugModeSwitch = new Button(Config.debugMode ? "Yes" : "No", Fonts.SM, Color.ORANGE, 0, 0, Align.CENTER);
     debugModeSwitch.placeNextTo(debugModeLabel, Side.BELOW);
     debugModeSwitch.setOnClick(() -> {
+      // Toggle debug mode and update button text
       Config.debugMode = !Config.debugMode;
       debugModeSwitch.setContent(Config.debugMode ? "Yes" : "No");
     });
 
-    // Show fps
+    // Show FPS settings
     showFPSLabel = new Text("Show FPS", Fonts.MD, Color.white, Config.screenWidth / 2, Config.scaleByY(550), Align.CENTER);
     showFPSSwitch = new Button(Config.showFPS ? "Yes" : "No", Fonts.SM, Color.ORANGE, 0, 0, Align.CENTER);
     showFPSSwitch.placeNextTo(showFPSLabel, Side.BELOW);
     showFPSSwitch.setOnClick(() -> {
+      // Toggle FPS display and update button text
       Config.showFPS = !Config.showFPS;
       showFPSSwitch.setContent(Config.showFPS ? "Yes" : "No");
     });
 
-//    // Max fps
-//    maxFPSLabel = new Text("Max FPS", Fonts.MD, Color.white, Config.screenWidth / 2, Config.scaleByY(675), Align.CENTER);
-//    maxFPSSwitch = new Button(String.valueOf(Config.maxFPS), Fonts.SM, Color.ORANGE, 0, 0, Align.CENTER);
-//    maxFPSSwitch.placeNextTo(maxFPSLabel, Side.BELOW);
-//    maxFPSSwitch.setOnClick(() -> {
-//      Config.maxFPS = Config.maxFPS == 30 ? 60 : 30;
-//      maxFPSSwitch.setContent(String.valueOf(Config.maxFPS));
-//    });
-
-    // Back button
+    // Back button initialization
     backButton = new Button("Back", Fonts.SM, Color.ORANGE, Config.screenWidth / 2, Config.scaleByY(825), Align.CENTER);
     backButton.setOnClick(() -> {
+      // Save settings and return to the previous menu
       Config.save();
-      this.game.stage = this.game.menuStage;
-      this.game.removeMouseListener(this);
-      this.game.addMouseListener(this.game.menuStage);
+      this.game.stage = this.game.menuStage; // Switch to the menu stage
+      this.game.removeMouseListener(this); // Remove mouse listener from current stage
+      this.game.addMouseListener(this.game.menuStage); // Add mouse listener to the menu stage
     });
   }
 
   @Override
   public void update() {
-
+    // Update logic for the settings stage (currently empty)
   }
 
   @Override
   public void draw(Graphics2D g2) {
+    // Draw all UI elements
     this.settingsTitle.draw(g2);
-
-    // Back button
     this.backButton.draw(g2);
-
-    // Volume
     this.volumeLabel.draw(g2);
     this.volumeValue.draw(g2);
     this.minusVolumeButton.draw(g2);
     this.plusVolumeButton.draw(g2);
-
-    // Debug mode
     this.debugModeLabel.draw(g2);
     this.debugModeSwitch.draw(g2);
-
-    // Show fps
     this.showFPSLabel.draw(g2);
     this.showFPSSwitch.draw(g2);
-
-    // Max fps
-//    this.maxFPSLabel.draw(g2);
-//    this.maxFPSSwitch.draw(g2);
-
-    // Resolution
     this.resolutionLabel.draw(g2);
     this.resolutionValue.draw(g2);
     this.minusResolutionButton.draw(g2);
@@ -246,6 +191,12 @@ public class SettingsStage implements BaseMenu {
 
   @Override
   public void mouseClicked(MouseEvent e) {
+
+  }
+
+  @Override
+  public void mousePressed(MouseEvent e) {
+    // Handle mouse press events
     Point cursorPoint = e.getPoint();
 
     if (minusVolumeButton.contains(cursorPoint)) {
@@ -265,11 +216,6 @@ public class SettingsStage implements BaseMenu {
     } else if (backButton.contains(cursorPoint)) {
       backButton.click();
     }
-  }
-
-  @Override
-  public void mousePressed(MouseEvent e) {
-
   }
 
   @Override

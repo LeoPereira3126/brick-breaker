@@ -22,19 +22,19 @@ public class Main {
     // Create a new JFrame instance which represents the main window of the game
     JFrame window = new JFrame();
 
-    Config.load();
+    Config.load(); // Load configuration settings from properties file
 
-    URL iconPath = Main.class.getResource("/icon.ico");
+    URL iconPath = Main.class.getResource("/icon.ico"); // Load the game icon
 
-    assert iconPath != null;
+    assert iconPath != null; // Ensure the icon path is not null
 
-    ImageIcon icon = new ImageIcon(iconPath);
+    ImageIcon icon = new ImageIcon(iconPath); // Create an ImageIcon from the icon path
 
-    window.setIconImage(icon.getImage());
+    window.setIconImage(icon.getImage()); // Set the icon for the window
 
-    Cursor cursor = CursorLoader.loadCursor("Default");
+    Cursor cursor = CursorLoader.loadCursor("Default"); // Load the custom cursor
 
-    window.setCursor(cursor);
+    window.setCursor(cursor); // Set the cursor for the window
 
     // Set the default close operation to exit the application when the window is closed
     window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,9 +45,9 @@ public class Main {
     // Set the title of the window
     window.setTitle("BrickBreaker");
 
-    window.setUndecorated(true);  // Eliminar bordes de la ventana
+    window.setUndecorated(true);  // Remove window borders
 
-//    GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    // GraphicsDevice graphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice(); // Uncomment to use full-screen mode
 
     // Create a new instance of the BlockBreaker game panel
     BrickBreaker game = new BrickBreaker(window);
@@ -61,8 +61,8 @@ public class Main {
     // Center the window on the screen
     window.setLocationRelativeTo(null);
 
-    // Establecer el JFrame en modo de pantalla completa
-//    graphicsDevice.setFullScreenWindow(window);
+    // Set the JFrame to full-screen mode (uncomment the following line to enable it)
+    // graphicsDevice.setFullScreenWindow(window);
 
     // Make the window visible
     window.setVisible(true);
